@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapshotProvider", "SnapshotProvider\SnapshotProvider.csproj", "{4A0E0279-6784-4D0A-832E-82EE787D8056}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrakkerModels", "..\trakker-models\trakker-models\trakker-models\TrakkerModels.csproj", "{8F6CD3CF-3955-4B71-8749-7E6E8683677B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnapshotProviderUnitTest", "SnapshotProviderUnitTest\SnapshotProviderUnitTest.csproj", "{43462C13-EBBC-4D43-A13E-FAF98299FFB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{4A0E0279-6784-4D0A-832E-82EE787D8056}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A0E0279-6784-4D0A-832E-82EE787D8056}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A0E0279-6784-4D0A-832E-82EE787D8056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F6CD3CF-3955-4B71-8749-7E6E8683677B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6CD3CF-3955-4B71-8749-7E6E8683677B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6CD3CF-3955-4B71-8749-7E6E8683677B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6CD3CF-3955-4B71-8749-7E6E8683677B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43462C13-EBBC-4D43-A13E-FAF98299FFB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43462C13-EBBC-4D43-A13E-FAF98299FFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43462C13-EBBC-4D43-A13E-FAF98299FFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43462C13-EBBC-4D43-A13E-FAF98299FFB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
