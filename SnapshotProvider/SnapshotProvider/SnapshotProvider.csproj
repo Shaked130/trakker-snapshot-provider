@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\trakker-models\trakker-models\trakker-models\TrakkerModels.csproj" />
+  </ItemGroup>
+
 </Project>
