@@ -21,14 +21,20 @@ namespace SnapshotProvider.Utilities
             {
                 foreach (var filePath in Directory.EnumerateFiles(dir.FullPath))
                 {
-                    dir.Children.Add(new TrakkerModels.FileInfo(filePath));
+                    var file = new TrakkerModels.FileInfo(filePath);
+                    dir.Children.Add(file);
+
+                    dir.Size += file.Size;
                 }
                 foreach (var directory in Directory.EnumerateDirectories(dir.FullPath))
                 {
                     var newDir = new TrakkerModels.DirectoryInfo(directory);
                     dir.Children.Add(newDir);
+
+                    // Populate the new directory with children
                     DirectorySearch(ref newDir);
-                    newDir.Size = newDir.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
+
+                    dir.Size += newDir.Size;
                 }
             }
             catch (System.Exception ex)
