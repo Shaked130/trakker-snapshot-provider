@@ -9,7 +9,7 @@ namespace SnapshotProvider
     {
         List<System.IO.DriveInfo> GetDrivesMetadata();
 
-        DriveInfo GetDriveInfo(string driveName);
+        DriveInfo GetDriveInfo(string driveName, bool checkDriveValidation);
 
     }
 }

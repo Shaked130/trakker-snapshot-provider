@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,27 +14,28 @@ namespace SnapshotProvider.Utilities
         /// <summary>
         /// Scanning the given path.
         /// </summary>
-        /// <param name="dir">DirectoryInfo that contains the path to be scan</param>
-        // TODO: Improve the performance of the function! 
-        public static void DirectorySearch(ref TrakkerModels.DirectoryInfo dir)
+        /// <param name="currentDirectoryInfo">DirectoryInfo that contains the path to be scan</param>
+        public static void DirectorySearch(TrakkerModels.DirectoryInfo currentDirectoryInfo)
         {
             try
             {
-                foreach (var filePath in Directory.EnumerateFiles(dir.FullPath))
+                foreach (var filePath in Directory.EnumerateFiles(currentDirectoryInfo.FullPath))
                 {
-                    dir.Children.Add(new TrakkerModels.FileInfo(filePath));
+                    var file = new TrakkerModels.FileInfo(filePath);
+                    currentDirectoryInfo.Children.Add(file);
+                    currentDirectoryInfo.Size += file.Size;
                 }
-                foreach (var directory in Directory.EnumerateDirectories(dir.FullPath))
+                foreach (var directory in Directory.EnumerateDirectories(currentDirectoryInfo.FullPath))
                 {
                     var newDir = new TrakkerModels.DirectoryInfo(directory);
-                    dir.Children.Add(newDir);
-                    DirectorySearch(ref newDir);
-                    newDir.Size = newDir.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
+                    currentDirectoryInfo.Children.Add(newDir);
+                    DirectorySearch(newDir);
+                    newDir.Size += newDir.Size;
                 }
             }
-            catch (System.Exception ex)
+            catch (System.UnauthorizedAccessException ex)
             {
-                //TODO: We need to decide what to do with an error case
+                Debug.WriteLine(ex.Message);
             }
         }
 

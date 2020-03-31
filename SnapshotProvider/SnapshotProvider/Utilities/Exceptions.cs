@@ -8,10 +8,15 @@ namespace SnapshotProvider.Utilities
     {
         public class DriveNotFoundException : Exception
         {
+            public DriveNotFoundException(string driveName) : base($"The drive: {driveName} not found!")
+            { }
         }
 
         public class DriveNotSupportedException : Exception
         {
+            public DriveNotSupportedException(string driveName) : base($"The drive: {driveName} not supported!")
+            {
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using SnapshotProvider.Utilities;
 using TrakkerModels;
+using DriveInfo = TrakkerModels.DriveInfo;
 
 namespace SnapshotProvider
 {
@@ -16,7 +17,7 @@ namespace SnapshotProvider
         public List<System.IO.DriveInfo> GetDrivesMetadata()
         {
             return System.IO.DriveInfo.GetDrives()
-                .Where(drive => Filter.IsDriveSupported(drive.DriveType) && drive.IsReady).ToList();
+                .Where(drive => Filter.IsDriveTypeSupported(drive.DriveType) && drive.IsReady).ToList();
         }
 
 
@@ -24,26 +25,25 @@ namespace SnapshotProvider
         /// The function scans the given drive and returns all the drive information.
         /// </summary>
         /// <param name="driveName"> The drive name</param>
+        /// <param name="checkDriveValidation"> Check if the drive is supported </param>
         /// <returns> A DriveInfo object with all the data </returns>
-        // TODO: Improve the performance of the function! 
-        public TrakkerModels.DriveInfo GetDriveInfo(string driveName)
+        public TrakkerModels.DriveInfo GetDriveInfo(string driveName, bool checkDriveValidation = true)
         {
             if (!Directory.Exists(driveName))
             {
-                throw new Utilities.Exceptions.DriveNotFoundException();
+                throw new Utilities.Exceptions.DriveNotFoundException(driveName);
             }
 
-            if (GetDrivesMetadata().All(driver => driver.Name != driveName))
+            if (checkDriveValidation && Utilities.Filter.IsDriveSupported(driveName, GetDrivesMetadata()))
             {
-                throw new Utilities.Exceptions.DriveNotSupportedException();
+                throw new Utilities.Exceptions.DriveNotSupportedException(driveName);
             }
 
             var drive = new TrakkerModels.DirectoryInfo(driveName);
-            Utilities.Scan.DirectorySearch(ref drive);
-            // TODO: Replace this
+            Utilities.Scan.DirectorySearch(drive);
             drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
 
-            return new TrakkerModels.DriveInfo(driveName,drive);
+            return new TrakkerModels.DriveInfo(driveName, drive, drive.Size);
         }
     }
 }
