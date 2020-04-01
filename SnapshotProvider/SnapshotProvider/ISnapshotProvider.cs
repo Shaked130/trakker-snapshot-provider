@@ -5,11 +5,11 @@ using DriveInfo = TrakkerModels.DriveInfo;
 
 namespace SnapshotProvider
 {
-    internal interface ISnapshotProvider
+    public interface ISnapshotProvider
     {
         List<System.IO.DriveInfo> GetDrivesMetadata();
 
-        DriveInfo GetDriveInfo(string driveName);
+        DriveInfo GetDriveInfo(string driveName, bool checkDriveValidation);
 
     }
 }

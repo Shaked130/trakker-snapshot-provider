@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SnapshotProvider.Utilities
 {
+    // CR: This could be internal class the server shouldn't know about this.
     public static class Filter
     {
         /// <summary>
@@ -9,7 +12,7 @@ namespace SnapshotProvider.Utilities
         /// </summary>
         /// <param name="driveType"> The drive type</param>
         /// <returns> true if the drive type is supported, false if not. </returns>
-        public static bool IsDriveSupported(DriveType driveType)
+        public static bool IsDriveTypeSupported(DriveType driveType)
         {
             return driveType switch
             {
@@ -19,6 +22,18 @@ namespace SnapshotProvider.Utilities
                 DriveType.Unknown => false,
                 _ => true
             };
+        }
+
+        /// <summary>
+        /// Check if the given drive name is supported
+        /// </summary>
+        /// <param name="driveName"> The drive name </param>
+        /// <param name="supportedDrives">The supported drives </param>
+        /// // CR: Fill the returns
+        /// <returns></returns>
+        public static bool IsDriveSupported(string driveName, List<System.IO.DriveInfo> supportedDrives)
+        {
+            return supportedDrives.All(drive => drive.Name != driveName);
         }
     }
 }

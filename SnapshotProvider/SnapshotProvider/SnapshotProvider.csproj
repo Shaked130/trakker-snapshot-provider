@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\trakker-models\trakker-models\trakker-models\TrakkerModels.csproj" />
+    <ProjectReference Include="..\..\..\trakker-models\trakker-models\trakker-models\TrakkerModels.csproj" />
   </ItemGroup>
 
 </Project>
