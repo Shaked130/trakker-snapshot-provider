@@ -9,36 +9,31 @@ using FileInfo = System.IO.FileInfo;
 
 namespace SnapshotProvider.Utilities
 {
-    // CR: This could be internal class the server shouldn't know about this.
-    // CR: (Kfir) This class should be static
-    public class Scan
+    
+    internal static class Scan
     {
-        // CR: (Kfir) Pick a better name for "DirectorySearch", e.g. "ScanDrive"
         /// <summary>
         /// Scanning the given path.
         /// </summary>
         /// <param name="currentDirectoryInfo">DirectoryInfo that contains the path to be scan</param>
-        public static void DirectorySearch(TrakkerModels.DirectoryInfo currentDirectoryInfo)
+        public static void ScanDrive(TrakkerModels.DirectoryInfo currentDirectoryInfo)
         {
             try
             {
                 foreach (var filePath in Directory.EnumerateFiles(currentDirectoryInfo.FullPath))
                 {
-                    // CR: file is not a good name. I think directoryFile is better.
-                    // CR: (Kfir) I actually think 'file' is okay in this context
-                    var file = new TrakkerModels.FileInfo(filePath);
+                    var file = new TrakkerModels.FileInfo((ulong)new System.IO.FileInfo(filePath).Length, filePath);
                     currentDirectoryInfo.Children.Add(file);
                     currentDirectoryInfo.Size += file.Size;
                 }
-                // CR: (Kfir) Leave an empty line between blocks (blocks can be for, foreach, switch, if, etc...)
-                // CR: (Kfir) 'directory' is a misleading name, because this is just the path
-                foreach (var directory in Directory.EnumerateDirectories(currentDirectoryInfo.FullPath))
+                
+
+                foreach (var directoryPath in Directory.EnumerateDirectories(currentDirectoryInfo.FullPath))
                 {
-                    // CR: newDir is not a good name also.
-                    var newDir = new TrakkerModels.DirectoryInfo(directory);
-                    currentDirectoryInfo.Children.Add(newDir);
-                    DirectorySearch(newDir);
-                    currentDirectoryInfo.Size += newDir.Size;
+                    var directoryInfo = new TrakkerModels.DirectoryInfo(directoryPath);
+                    currentDirectoryInfo.Children.Add(directoryInfo);
+                    ScanDrive(directoryInfo);
+                    currentDirectoryInfo.Size += directoryInfo.Size;
                 }
             }
             catch (System.UnauthorizedAccessException ex)

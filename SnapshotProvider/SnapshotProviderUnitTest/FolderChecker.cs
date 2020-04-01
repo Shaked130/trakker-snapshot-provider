@@ -1,59 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SnapshotProvider.Utilities;
-using TrakkerModels;
-using DriveInfo = System.IO.DriveInfo;
 
 namespace SnapshotProviderUnitTest
 {
-    // CR: Change the name of the file.
-    [TestClass]
-    public class GeneralTests
-    {
-        /// <summary>
-        /// The function checks if the drives metadata is correct.
-        /// </summary>
-        [TestMethod]
-        public void GetDrivesMetadataChecker()
-        {
-            // Arrange
-            var snapshotProvider = new SnapshotProvider.SnapshotProvider();
-
-            // Act 
-            var drivesMetadata = snapshotProvider.GetDrivesMetadata();
-
-            // Assert
-            if (drivesMetadata.Count(driveMetaData => !driveMetaData.IsReady || !Filter.IsDriveTypeSupported(driveMetaData.DriveType)) > 0)
-            {
-                Assert.Fail();
-            }
-
-        }
-
-        /// <summary>
-        /// Checks the drive total size
-        /// </summary>
-        [TestMethod]
-        public void GetDriveTest()
-        {
-            // Arrange
-            var snapshotProvider = new SnapshotProvider.SnapshotProvider();
-            var randomDrive = DriveInfo.GetDrives()[0];
-
-            
-            var drive = snapshotProvider.GetDriveInfo(randomDrive.Name);
-
-            // Assert
-            Assert.AreEqual(drive.Size, randomDrive.TotalSize);
-            
-        }
-
-    }
-
-    // CR: (Kfir) Separate this to another file
     [TestClass]
     public class FolderChecker
     {
@@ -65,9 +15,8 @@ namespace SnapshotProviderUnitTest
             private static readonly Random Random = new Random();
             public static ulong TotalSize = 0;
 
-            // CR: No need to write "The function" at the beginning of summaries. Just "Generates.."
             /// <summary>
-            /// The function generates a new name with the given length.
+            /// Generates a new name with the given length.
             /// </summary>
             /// <param name="length"> The length of the new name </param>
             /// <returns> The new name </returns>
@@ -88,8 +37,7 @@ namespace SnapshotProviderUnitTest
             /// <param name="sizeInBytes">The new file size </param>
             private static void CreateNewFile(string filepath, long sizeInBytes)
             {
-                // CR: (Kfir) Omit the FileShare part, it's optional and not relevant here
-                using var fs = new FileStream(filepath, FileMode.Create, FileAccess.Write, FileShare.None);
+                using var fs = new FileStream(filepath, FileMode.Create, FileAccess.Write);
                 fs.SetLength(sizeInBytes);
             }
 
@@ -140,7 +88,7 @@ namespace SnapshotProviderUnitTest
         public void TestFolderSize()
         {
             const string newTempFolderName = "TempFolder";
-            const int newTempFolderDepth = 3;
+            const int newTempFolderDepth = 2;
 
             // Arrange
             var snapshotProvider = new SnapshotProvider.SnapshotProvider();
@@ -150,14 +98,12 @@ namespace SnapshotProviderUnitTest
 
             // Act 
             var drive = snapshotProvider.GetDriveInfo(newTempFolder, false);
-            Directory.Delete(newTempFolder,true);
+            Directory.Delete(newTempFolder, true);
 
             // Assert
             Assert.AreEqual(drive.Size, NewFolder.TotalSize);
 
         }
-
-
 
     }
 }
