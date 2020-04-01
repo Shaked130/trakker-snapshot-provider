@@ -4,6 +4,8 @@ using System.Text;
 
 namespace SnapshotProvider.Utilities
 {
+    // CR: This could be internal class the server shouldn't know about this.
+    // CR: Make a different class for different exceptions in its own Directory (not utilities). 
     public static class Exceptions
     {
         public class DriveNotFoundException : Exception

@@ -8,6 +8,7 @@ using DriveInfo = System.IO.DriveInfo;
 
 namespace SnapshotProviderUnitTest
 {
+    // CR: Change the name of the file.
     [TestClass]
     public class GeneralTests
     {

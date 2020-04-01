@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace SnapshotProvider.Utilities
 {
+    // CR: This could be internal class the server shouldn't know about this.
     public static class Filter
     {
         /// <summary>
@@ -28,6 +29,7 @@ namespace SnapshotProvider.Utilities
         /// </summary>
         /// <param name="driveName"> The drive name </param>
         /// <param name="supportedDrives">The supported drives </param>
+        /// // CR: Fill the returns
         /// <returns></returns>
         public static bool IsDriveSupported(string driveName, List<System.IO.DriveInfo> supportedDrives)
         {

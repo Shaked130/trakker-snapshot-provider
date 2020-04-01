@@ -20,6 +20,7 @@ namespace SnapshotProvider
                 .Where(drive => Filter.IsDriveTypeSupported(drive.DriveType) && drive.IsReady).ToList();
         }
 
+        // CR: Add <exception cref="ExceptionName">Thrown when ...</exception>
 
         /// <summary>
         /// The function scans the given drive and returns all the drive information.
@@ -33,13 +34,14 @@ namespace SnapshotProvider
             {
                 throw new Utilities.Exceptions.DriveNotFoundException(driveName);
             }
-
+            // CR: This function (IsDriveSupported) is a bit odd. maybe think of another way to do that.
             if (checkDriveValidation && Utilities.Filter.IsDriveSupported(driveName, GetDrivesMetadata()))
             {
                 throw new Utilities.Exceptions.DriveNotSupportedException(driveName);
             }
 
             var drive = new TrakkerModels.DirectoryInfo(driveName);
+            // CR: I think you need to find a way to return a new drive and not change it inside, it will be better looking.
             Utilities.Scan.DirectorySearch(drive);
             drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
 
