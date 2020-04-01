@@ -24,6 +24,9 @@ namespace SnapshotProvider.Utilities
             };
         }
 
+        // CR: This function (IsDriveSupported) is a bit odd. maybe think of another way to do that.
+        // CR: (Kfir) The odd part is that it relies on supportedDrives list. Why does IsDriveSupported rely on GetDrivesMetdata,
+        //     instead of GetDrivesMetadata relying on IsDriveSupported?..
         /// <summary>
         /// Check if the given drive name is supported
         /// </summary>

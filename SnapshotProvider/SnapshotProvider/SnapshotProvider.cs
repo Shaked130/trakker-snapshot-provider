@@ -34,7 +34,7 @@ namespace SnapshotProvider
             {
                 throw new Utilities.Exceptions.DriveNotFoundException(driveName);
             }
-            // CR: This function (IsDriveSupported) is a bit odd. maybe think of another way to do that.
+            
             if (checkDriveValidation && Utilities.Filter.IsDriveSupported(driveName, GetDrivesMetadata()))
             {
                 throw new Utilities.Exceptions.DriveNotSupportedException(driveName);
@@ -42,6 +42,8 @@ namespace SnapshotProvider
 
             var drive = new TrakkerModels.DirectoryInfo(driveName);
             // CR: I think you need to find a way to return a new drive and not change it inside, it will be better looking.
+            // CR: (Kfir) I agree with Dvir about that. You can do the recursion with another method
+            //     that returns DirectoryInfo, but the main method should return DriveInfo
             Utilities.Scan.DirectorySearch(drive);
             drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
 

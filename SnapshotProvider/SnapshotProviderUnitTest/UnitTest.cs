@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SnapshotProvider.Utilities;
 using TrakkerModels;
@@ -52,15 +53,19 @@ namespace SnapshotProviderUnitTest
 
     }
 
+    // CR: (Kfir) Separate this to another file
     [TestClass]
     public class FolderChecker
     {
+        // CR: (Kfir) Why is this static? I see you use TotalSize, which seems more like a property of a regular class rather than a
+        //     static thing
         private static class NewFolder
         {
             private const string ValidChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             private static readonly Random Random = new Random();
             public static ulong TotalSize = 0;
 
+            // CR: No need to write "The function" at the beginning of summaries. Just "Generates.."
             /// <summary>
             /// The function generates a new name with the given length.
             /// </summary>
@@ -83,6 +88,7 @@ namespace SnapshotProviderUnitTest
             /// <param name="sizeInBytes">The new file size </param>
             private static void CreateNewFile(string filepath, long sizeInBytes)
             {
+                // CR: (Kfir) Omit the FileShare part, it's optional and not relevant here
                 using var fs = new FileStream(filepath, FileMode.Create, FileAccess.Write, FileShare.None);
                 fs.SetLength(sizeInBytes);
             }
@@ -134,7 +140,7 @@ namespace SnapshotProviderUnitTest
         public void TestFolderSize()
         {
             const string newTempFolderName = "TempFolder";
-            const int newTempFolderDepth = 2;
+            const int newTempFolderDepth = 3;
 
             // Arrange
             var snapshotProvider = new SnapshotProvider.SnapshotProvider();
