@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using SnapshotProvider.Platforms;
 using SnapshotProvider.Utilities;
 using TrakkerModels;
 using DriveInfo = TrakkerModels.DriveInfo;
@@ -9,6 +11,23 @@ namespace SnapshotProvider
 {
     public class SnapshotProvider : ISnapshotProvider
     {
+        private readonly IPlatformHandler _platformHandler;
+
+        public SnapshotProvider()
+        {
+            this._platformHandler = getPlatformHandler();
+        }
+
+        private IPlatformHandler getPlatformHandler()
+        {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return new WindowsPlatformHandler();
+            }
+
+            //TODO: Change this line
+            return new WindowsPlatformHandler();
+        }
 
         /// <summary>
         /// Returns the valid drives that found.
@@ -44,6 +63,11 @@ namespace SnapshotProvider
             drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
 
             return new TrakkerModels.DriveInfo(driveName, drive, drive.Size);
+        }
+
+        public List<ProgramInfo> GetInstalledApps()
+        {
+            return this._platformHandler.GetInstalledPrograms();
         }
     }
 }

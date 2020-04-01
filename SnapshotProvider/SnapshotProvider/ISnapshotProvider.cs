@@ -11,5 +11,7 @@ namespace SnapshotProvider
 
         DriveInfo GetDriveInfo(string driveName, bool checkDriveValidation);
 
+        List<ProgramInfo> GetInstalledApps();
+
     }
 }

@@ -41,12 +41,25 @@ namespace SnapshotProviderUnitTest
             var snapshotProvider = new SnapshotProvider.SnapshotProvider();
             var randomDrive = DriveInfo.GetDrives()[0];
 
-            
+            // Act 
             var drive = snapshotProvider.GetDriveInfo(randomDrive.Name);
 
             // Assert
             Assert.AreEqual(drive.Size, randomDrive.TotalSize);
             
+        }
+
+        [TestMethod]
+        public void CheckInstalledPrograms()
+        {
+            // Arrange
+            var snapshotProvider = new SnapshotProvider.SnapshotProvider();
+
+
+            var apps = snapshotProvider.GetInstalledApps();
+
+            // Assert
+            //TODO: ...
         }
 
     }
