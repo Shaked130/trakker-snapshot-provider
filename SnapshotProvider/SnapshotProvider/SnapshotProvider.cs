@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,18 +16,23 @@ namespace SnapshotProvider
 
         public SnapshotProvider()
         {
-            this._platformHandler = getPlatformHandler();
+            this._platformHandler = GetPlatformHandler();
         }
 
-        private IPlatformHandler getPlatformHandler()
+        /// <summary>
+        /// Detects the platform and returns the platform handler
+        /// </summary>
+        /// <returns> The platform handler </returns>
+        private static IPlatformHandler GetPlatformHandler()
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return new WindowsPlatformHandler();
             }
 
-            //TODO: Change this line
-            return new WindowsPlatformHandler();
+            //TODO: Change this to custom exception (Need to merge first)
+            throw new Exception("Unsupported Platform!");
+            
         }
 
         /// <summary>
