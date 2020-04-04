@@ -9,7 +9,6 @@ namespace SnapshotProvider
     {
         IEnumerable<System.IO.DriveInfo> GetDrivesMetadata();
 
-        // CR: (Kfir) Why does external code have control over validation?
         DriveInfo GetDriveInfo(string driveName, bool checkDriveValidation);
 
     }

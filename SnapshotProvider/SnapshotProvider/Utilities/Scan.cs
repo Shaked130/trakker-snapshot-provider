@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using TrakkerModels;
+using DriveInfo = TrakkerModels.DriveInfo;
 using FileInfo = System.IO.FileInfo;
 
 namespace SnapshotProvider.Utilities
@@ -16,7 +17,7 @@ namespace SnapshotProvider.Utilities
         /// Scanning the given path.
         /// </summary>
         /// <param name="currentDirectoryInfo">DirectoryInfo that contains the path to be scan</param>
-        public static void ScanDrive(TrakkerModels.DirectoryInfo currentDirectoryInfo)
+        private static void ScanDrive(TrakkerModels.DirectoryInfo currentDirectoryInfo)
         {
             try
             {
@@ -38,9 +39,24 @@ namespace SnapshotProvider.Utilities
             }
             catch (System.UnauthorizedAccessException ex)
             {
-                // CR: (Kfir) This is not enough. In this case, return a DirectoryInfo with some boolean that says we had no access to it
+                currentDirectoryInfo.CanAccess = false;
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+
+        /// <summary>
+        /// Returns a driveInfo object with all the data.
+        /// </summary>
+        /// <param name="driveName"> The drive name</param>
+        /// <returns> DriveInfo with all the data </returns>
+        public static DriveInfo GetDriveInfo(string driveName)
+        {
+            var drive = new TrakkerModels.DirectoryInfo(driveName);
+            Utilities.Scan.ScanDrive(drive);
+            drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
+
+            return new TrakkerModels.DriveInfo(driveName, drive, drive.Size);
         }
 
     }

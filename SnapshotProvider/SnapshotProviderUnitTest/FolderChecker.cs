@@ -7,25 +7,35 @@ namespace SnapshotProviderUnitTest
     [TestClass]
     public class FolderChecker
     {
-        // CR: (Kfir) Why is this static? I see you use TotalSize, which seems more like a property of a regular class rather than a
-        //     static thing
-        private static class NewFolder
+        private class NewFolder
         {
             private const string ValidChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            private static readonly Random Random = new Random();
-            public static ulong TotalSize = 0;
+            private readonly Random _random;
+            public ulong TotalSize;
+
+            /// <summary>
+            ///Create a New folder with random files and directories in the given path.
+            /// </summary>
+            /// <param name="directoryPath"> The path of the directory </param>
+            /// <param name="depth"> The depth of the directory </param>
+            public NewFolder(string directoryPath, int depth = 2)
+            {
+                this.TotalSize = 0;
+                this._random = new Random();
+                GenerateFolders(directoryPath, depth);
+            }
 
             /// <summary>
             /// Generates a new name with the given length.
             /// </summary>
             /// <param name="length"> The length of the new name </param>
             /// <returns> The new name </returns>
-            private static string GenerateName(int length)
+            private string GenerateName(int length)
             {
                 var chars = new char[length];
                 for (var i = 0; i < length; i++)
                 {
-                    chars[i] = ValidChars[Random.Next(ValidChars.Length)];
+                    chars[i] = ValidChars[this._random.Next(ValidChars.Length)];
                 }
                 return new string(chars);
             }
@@ -46,7 +56,7 @@ namespace SnapshotProviderUnitTest
             /// </summary>
             /// <param name="currentDirectory"> The current Directory </param>
             /// <param name="depth">The depth of the new folder </param>
-            public static void GenerateFolders(string currentDirectory, int depth)
+            private void GenerateFolders(string currentDirectory, int depth)
             {
                 const int folderNameLength = 10;
                 const int filesCountMin = 0;
@@ -62,10 +72,10 @@ namespace SnapshotProviderUnitTest
                 }
                 depth--;
 
-                var filesCount = Random.Next(filesCountMin, filesCountMax);
-                var folderCount = Random.Next(folderCountMin, folderCountMax);
-                var filesSize = Random.Next(fileSizeMin, fileSizeMax);
-                TotalSize += (ulong)(filesSize * filesCount);
+                var filesCount = _random.Next(filesCountMin, filesCountMax);
+                var folderCount = _random.Next(folderCountMin, folderCountMax);
+                var filesSize = _random.Next(fileSizeMin, fileSizeMax);
+                this.TotalSize += (ulong)(filesSize * filesCount);
 
                 for (var i = 0; i < filesCount; i++)
                 {
@@ -74,7 +84,7 @@ namespace SnapshotProviderUnitTest
 
                 for (var i = 0; i < folderCount; i++)
                 {
-                    var newDirPath = Path.Combine(currentDirectory, NewFolder.GenerateName(folderNameLength));
+                    var newDirPath = Path.Combine(currentDirectory, this.GenerateName(folderNameLength));
                     Directory.CreateDirectory(newDirPath);
                     GenerateFolders(newDirPath, depth);
                 }
@@ -88,20 +98,21 @@ namespace SnapshotProviderUnitTest
         public void TestFolderSize()
         {
             const string newTempFolderName = "TempFolder";
-            const int newTempFolderDepth = 2;
+            const int newTempFolderDepth = 3;
 
             // Arrange
             var snapshotProvider = new SnapshotProvider.SnapshotProvider();
             var newTempFolder = Path.Combine(Directory.GetCurrentDirectory(), newTempFolderName);
             Directory.CreateDirectory(newTempFolder);
-            NewFolder.GenerateFolders(newTempFolder, newTempFolderDepth);
+            var newFolder = new NewFolder(newTempFolder, newTempFolderDepth);
+
 
             // Act 
             var drive = snapshotProvider.GetDriveInfo(newTempFolder, false);
             Directory.Delete(newTempFolder, true);
 
             // Assert
-            Assert.AreEqual(drive.Size, NewFolder.TotalSize);
+            Assert.AreEqual(drive.Size, newFolder.TotalSize);
 
         }
 
