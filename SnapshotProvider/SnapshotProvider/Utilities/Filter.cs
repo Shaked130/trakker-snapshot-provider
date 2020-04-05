@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace SnapshotProvider.Utilities
 {
+    // CR: This could be internal class the server shouldn't know about this.
     public static class Filter
     {
         /// <summary>
