@@ -56,6 +56,8 @@ namespace SnapshotProvider.Utilities
             catch (System.IO.IOException)
             {
                 // CR: Maybe consider not catching the exception.
+                // CR: (Kfir) It makes sense that you catch the exception, but we need an indication that the
+                //     program's folder was inaccessible
                 return 0;
             }
 

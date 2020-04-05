@@ -19,6 +19,7 @@ namespace SnapshotProvider.Utilities
         /// <returns> The icon object in bytes array </returns>
         public static byte[] IconToBytes(Icon icon)
         {
+            // CR: (Kfir) We don't like abbreviations such as "calc" or "ms". Rename it to memoryStream
             using (var ms = new MemoryStream())
             {
                 icon.Save(ms);

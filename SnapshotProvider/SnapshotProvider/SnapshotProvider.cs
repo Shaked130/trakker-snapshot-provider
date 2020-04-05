@@ -19,6 +19,7 @@ namespace SnapshotProvider
             this._platformHandler = GetPlatformHandler();
         }
 
+        // CR: (Kfir) Move this to an internal static class in the Platforms namespace
         /// <summary>
         /// Detects the platform and returns the platform handler
         /// </summary>
@@ -30,6 +31,7 @@ namespace SnapshotProvider
                 return new WindowsPlatformHandler();
             }
 
+            // CR: (Kfir) Why do you need to merge first?..
             //TODO: Change this to custom exception (Need to merge first)
             throw new Exception("Unsupported Platform!");
             

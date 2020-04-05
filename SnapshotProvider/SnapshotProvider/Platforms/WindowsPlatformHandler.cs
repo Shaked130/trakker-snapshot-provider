@@ -78,6 +78,7 @@ namespace SnapshotProvider.Platforms
                         var installLocationSize = string.IsNullOrEmpty(installLocation) ? 0 : Utilities.Scan.GetDirectorySize(installLocation);
 
                         // CR: Spacing. 
+                        // CR: (Kfir) Yield; don't put it in a list
                         programs.Add(new ProgramInfo(name, displayIcon, installLocation,publisher,installLocationSize));
                     }
                 }
@@ -86,6 +87,7 @@ namespace SnapshotProvider.Platforms
             return programs;
         }
 
+        // CR: (Kfir) Why is this unused?
         /// <summary>
         /// Search the icon of the given program.
         /// </summary>
@@ -118,6 +120,7 @@ namespace SnapshotProvider.Platforms
                 }
             }
 
+            // CR: (Kfir) It is better to return null in such a case
             return "";
         }
 
