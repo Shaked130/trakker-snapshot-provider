@@ -17,6 +17,7 @@ namespace SnapshotProvider.Platforms
         public List<ProgramInfo> GetInstalledPrograms()
         {
             const string uninstallPath = @"Software\Microsoft\Windows\CurrentVersion\Uninstall";
+            // CR: Don't ignore the ReSharper alerts.
             const string wow6432nodePath = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
 
             var standardUninstallLocation = Registry.LocalMachine.OpenSubKey(uninstallPath);
@@ -29,7 +30,7 @@ namespace SnapshotProvider.Platforms
             programs.AddRange(GetInstalledProgramsFromRegistry(currentUserLocation));
             return programs;
         }
-
+        // CR: This function should be after the next one.
         /// <summary>
         /// Checks if the given program registry key is visible
         /// </summary>
@@ -42,6 +43,7 @@ namespace SnapshotProvider.Platforms
 
             if (key.GetValue(displayName) == null) return false;
             if (key.GetValue(systemComponent) == null) return true;
+            // CR: Move to const.
             return key.GetValue(systemComponent).ToString() != "1";
         }
 
@@ -63,8 +65,10 @@ namespace SnapshotProvider.Platforms
             {
                 using (var subKey = registryKey.OpenSubKey(subKeyName))
                 {
+                    // CR: Don't ignore the ReSharper alerts.
                     if (IsProgramVisible(subKey))
                     {
+                        //CR: Use conditional access.
                         var name = subKey.GetValue(displayNameKey).ToString();
                         var publisher = subKey.GetValue(publisherKey) == null ? "" : subKey.GetValue(publisherKey).ToString();
                         var installLocation = subKey.GetValue(installLocationKey) == null ? "" : subKey.GetValue(installLocationKey).ToString();
@@ -73,6 +77,7 @@ namespace SnapshotProvider.Platforms
                         // This size is only the size of the installation folder
                         var installLocationSize = string.IsNullOrEmpty(installLocation) ? 0 : Utilities.Scan.GetDirectorySize(installLocation);
 
+                        // CR: Spacing. 
                         programs.Add(new ProgramInfo(name, displayIcon, installLocation,publisher,installLocationSize));
                     }
                 }
@@ -92,14 +97,16 @@ namespace SnapshotProvider.Platforms
             const string productNameKey = "ProductName";
             const string productIconKey = "ProductIcon";
 
-
+            // CR: Don't ignore the ReSharper alerts.
             using (var installkeys = Registry.ClassesRoot.OpenSubKey(installerKey))
             {
                 foreach (var name in installkeys.GetSubKeyNames())
                 {
                     using var product = installkeys.OpenSubKey(name);
+                    // CR: Don't ignore the ReSharper alerts.
                     if (product?.GetValue(productNameKey) != null)
                     {
+                        // CR: Don't ignore the ReSharper alerts.
                         if (productName == product.GetValue(productNameKey).ToString())
                         {
                             if (product.GetValue(productIconKey) != null)

@@ -36,6 +36,8 @@ namespace SnapshotProvider.Utilities
             path = RemoveZeroFromEnd(path);
             try
             {
+                // CR: Don't ignore the ReSharper alerts. 
+                // CR: Move to const.
                 if (Path.GetExtension(path).ToLower() == ".exe")
                 {
                     return Convert.ToBase64String(IconToBytes(Icon.ExtractAssociatedIcon(path)));
@@ -46,11 +48,13 @@ namespace SnapshotProvider.Utilities
             catch (System.IO.IOException exception)
             {
                 Debug.WriteLine(exception.Message);
+                // CR: I think its better to return null.
                 return "";
             }
             catch (System.ArgumentException exception)
             {
                 Debug.WriteLine(exception.Message);
+                // CR: I think its better to return null.
                 return "";
             }
 

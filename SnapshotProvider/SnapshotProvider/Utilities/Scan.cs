@@ -50,10 +50,12 @@ namespace SnapshotProvider.Utilities
             try
             {
                 var directory = new DirectoryInfo(directoryPath);
+                // CR: fi is not a good name.
                 return (ulong)directory.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(fi => fi.Length);
             }
             catch (System.IO.IOException)
             {
+                // CR: Maybe consider not catching the exception.
                 return 0;
             }
 
