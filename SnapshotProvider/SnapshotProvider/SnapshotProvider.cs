@@ -16,11 +16,13 @@ namespace SnapshotProvider
         /// <returns> Valid drives </returns>
         public IEnumerable<System.IO.DriveInfo> GetDrivesMetadata()
         {
+            // CR: (Kfir) Why ToList()?
             return System.IO.DriveInfo.GetDrives()
                 .Where(drive => Filter.IsDriveTypeSupported(drive.DriveType) && drive.IsReady).ToList();
         }
 
-
+        // CR: (Kfir) remove "checkDriveValidation" and apply code from https://stackoverflow.com/questions/358196/c-sharp-internal-access-modifier-when-doing-unit-testing
+        //     to make the Scan class testable
         /// <summary>
         /// The function scans the given drive and returns all the drive information.
         /// </summary>

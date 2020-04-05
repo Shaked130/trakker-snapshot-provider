@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using TrakkerModels;
 using DriveInfo = TrakkerModels.DriveInfo;
@@ -14,26 +15,29 @@ namespace SnapshotProvider.Utilities
     internal static class Scan
     {
         /// <summary>
-        /// Scanning the given path.
+        /// Scan the given path.
         /// </summary>
-        /// <param name="currentDirectoryInfo">DirectoryInfo that contains the path to be scan</param>
-        private static void ScanDrive(TrakkerModels.DirectoryInfo currentDirectoryInfo)
+        /// <param name="path">Path of the directory to be scanned</param>
+        /// <returns>DirectoryInfo including the children</returns>
+        private static TrakkerModels.DirectoryInfo ScanDirectory(string path)
         {
+            var currentDirectoryInfo = new TrakkerModels.DirectoryInfo(path);
+
             try
             {
                 foreach (var filePath in Directory.EnumerateFiles(currentDirectoryInfo.FullPath))
                 {
+                    // CR: (Kfir) Move file size logic to private static GetFileSize
+                    // CR: (Kfir) Rename file to fileInfo to be consistent with "directoryInfo" in the next block
                     var file = new TrakkerModels.FileInfo((ulong)new System.IO.FileInfo(filePath).Length, filePath);
                     currentDirectoryInfo.Children.Add(file);
                     currentDirectoryInfo.Size += file.Size;
                 }
                 
-
                 foreach (var directoryPath in Directory.EnumerateDirectories(currentDirectoryInfo.FullPath))
                 {
-                    var directoryInfo = new TrakkerModels.DirectoryInfo(directoryPath);
+                    var directoryInfo = ScanDirectory(directoryPath);
                     currentDirectoryInfo.Children.Add(directoryInfo);
-                    ScanDrive(directoryInfo);
                     currentDirectoryInfo.Size += directoryInfo.Size;
                 }
             }
@@ -42,6 +46,8 @@ namespace SnapshotProvider.Utilities
                 currentDirectoryInfo.CanAccess = false;
                 Debug.WriteLine(ex.Message);
             }
+
+            return currentDirectoryInfo;
         }
 
 
@@ -52,11 +58,10 @@ namespace SnapshotProvider.Utilities
         /// <returns> DriveInfo with all the data </returns>
         public static DriveInfo GetDriveInfo(string driveName)
         {
-            var drive = new TrakkerModels.DirectoryInfo(driveName);
-            Utilities.Scan.ScanDrive(drive);
-            drive.Size = drive.Children.Aggregate<FileSystemNode, ulong>(0, (current, child) => current + child.Size);
-
-            return new TrakkerModels.DriveInfo(driveName, drive, drive.Size);
+            var driveDirectory = Utilities.Scan.ScanDirectory(driveName);
+            
+            // CR: (Kfir) See CR in DriveInfo model
+            return new TrakkerModels.DriveInfo(driveName, driveDirectory, driveDirectory.Size);
         }
 
     }
